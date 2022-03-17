@@ -17,7 +17,7 @@ def dataset_main_pump_friction():
                  ]
     whether_reason_sign = [0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0]
     whether_satisfy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
-    weight_table = [['规则' '1909A4C4CBBF754981C2559C35182A2A-低1报警/超差', '542C732FB8B14740958F60E4BB73C047-单调缓慢增长','3301152A5CA16C418DD797759C2F3CA2-高1报警/超差','A4DC319E8D388E4EA4893EC08BD841BF-高1报警/超差','135AF37FD54CFB47B5FDF5CF24836B69-高1报警/超差', 'C78C706D46B1EC4E8702397F81A7D27F-低1报警/超差', 'A145EDA043224B47B80098DDF5DA4787-低1报警/超差', '18E38A88738240468EDE9EECA66B0732-低1报警/超差', '6E6685BFD6485640AF2A360606839A38-高1报警/超差', '2983D94D05AD344BB74D0B203501A6AA-单调缓慢下降', '3A30244B0FF2BB4FB5A4A8CC22975C44-单调缓慢下降', '失效模式'],
+    weight_table = [['规则', '1909A4C4CBBF754981C2559C35182A2A-低1报警/超差', '542C732FB8B14740958F60E4BB73C047-单调缓慢增长', '3301152A5CA16C418DD797759C2F3CA2-高1报警/超差','A4DC319E8D388E4EA4893EC08BD841BF-高1报警/超差', '135AF37FD54CFB47B5FDF5CF24836B69-高1报警/超差', 'C78C706D46B1EC4E8702397F81A7D27F-低1报警/超差', 'A145EDA043224B47B80098DDF5DA4787-低1报警/超差', '18E38A88738240468EDE9EECA66B0732-低1报警/超差', '6E6685BFD6485640AF2A360606839A38-高1报警/超差', '2983D94D05AD344BB74D0B203501A6AA-单调缓慢下降', '3A30244B0FF2BB4FB5A4A8CC22975C44-单调缓慢下降', '失效模式'],
      ['主泵-机封-三级机封-动环-磨损-规则12', '低(0-0.5]', '低(0-0.5]', '高(0.5-1)', '高(0.5-1)', '低(0-0.5]', '高(0.5-1)', '高(0.5-1)', '0', '0', '0', '0', 'F001-磨损'],
      ['主泵-机封-三级机封-动环-磨损-规则11', '低(0-0.5]', '低(0-0.5]', '高(0.5-1)', '高(0.5-1)', '0', '高(0.5-1)', '高(0.5-1)', '低(0-0.5]', '0', '0', '0', 'F001-磨损'],
      ['主泵-机封-三级机封-动环-磨损-规则10', '低(0-0.5]', '低(0-0.5]', '高(0.5-1)', '高(0.5-1)', '0', '高(0.5-1)', '高(0.5-1)', '0', '低(0-0.5]', '0', '0', 'F001-磨损'],
@@ -36,7 +36,7 @@ def dataset_main_pump_friction():
 def test_part_threshold():
     # 读取数据
     weight_table, sign_name, whether_reason_sign, whether_satisfy = dataset_main_pump_friction()
-    assert  len(sign_name) == len(whether_reason_sign) == len(whether_satisfy)
+    assert len(sign_name) == len(whether_reason_sign) == len(whether_satisfy)
     weight_table = np.array(weight_table)
     whether_satisfy = np.array(whether_satisfy)
     calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
