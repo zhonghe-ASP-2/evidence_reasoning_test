@@ -439,7 +439,7 @@ def testresult(M,M1,M2,M3,M4,M5,M6, r_ind):
                 dic_list2.append(dd[M4[j]])
         di_di[dic_list1[i]] = max(dic_list2)                #di_di dic's value'''
     print(di_di)                                                    #各个失效模式置信度
-    return di_di
+    return dd, M5, di_di, alarm
 '''约简'''
 def removeun(Q, Q1, Q0, rea):
     Q2 = []
@@ -525,9 +525,9 @@ def maxconfidence(AR,AR_):
         mode_dic[mode_li[i]] = mode_va1[i]
     print(mode_dic)
 '''失效方法计算'''
-def methondcal(omen: object) -> object:
+def methondcal(data, sign, reason, omen):
     print('>>>>>叶子节点计算：')
-    data, sign, reason = readdata()
+    # data, sign, reason = readdata()
     pre = np.matrix([1,0.1,0.2,0.5])
     E, E0, rea = removeun(data, omen, sign, reason)                                      # E:满足情况, E0:征兆
     reason_ind = find_reason(rea)
@@ -535,11 +535,12 @@ def methondcal(omen: object) -> object:
     di = dictrule(data)
     w1 = np.ones([1, len(E)])  # 不同失效模式下的失效征兆权重
     '''失效模式置信度结果'''
-    result_di1 = testresult(data1, w1, E, pre, RU, di,dic_m, reason_ind)
-    print('>>>>>中间节点计算：')
-    inp = result_di1
-    dat = readdata1("./2.xlsx")
-    maxconfidence(dat, inp)
+    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = testresult(data1, w1, E, pre, RU, di,dic_m, reason_ind)
+    # print('>>>>>中间节点计算：')
+    # inp = calculated_rules
+    # dat = readdata1("./2.xlsx")
+    # maxconfidence(dat, inp)
+    return calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map
 
 
 def model_ER_A1():
