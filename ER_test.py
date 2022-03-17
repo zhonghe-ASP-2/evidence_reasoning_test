@@ -1,4 +1,5 @@
 from ER import *
+import random
 
 
 # 【主泵-磨损】 测试数据集
@@ -33,18 +34,267 @@ def dataset_main_pump_friction():
     return weight_table, sign_name, whether_reason_sign, whether_satisfy
 
 
-def test_part_threshold():
-    # 读取数据
+def test_results_type():
     weight_table, sign_name, whether_reason_sign, whether_satisfy = dataset_main_pump_friction()
     assert len(sign_name) == len(whether_reason_sign) == len(whether_satisfy)
     weight_table = np.array(weight_table)
     whether_satisfy = np.array(whether_satisfy)
+    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name,
+                                                                                          whether_reason_sign,
+                                                                                          whether_satisfy)
+    # print("#######################results############################")
+    # print(calculated_rules)
+    # print(rule2failuremode)
+    # print(failuremodes)
+    # print(failuremodes_alarm_map)
+    assert type(calculated_rules) == type({"name": "xi"})
+    assert type(rule2failuremode) == type({"name": "xi"})
+
+    for key in calculated_rules.keys():
+        assert type(calculated_rules[key]) == type(1.0)
+    for key in failuremodes.keys():
+        assert type(failuremodes[key]) == type(1.0)
+    for key in failuremodes_alarm_map.keys():
+        assert failuremodes_alarm_map[key] in ['A', 'B', 'C', 'D']
+
+
+# 共产生9种组合:
+# [1]: 都不满足
+def test_no_satisfy():
+    # 读取数据
+    weight_table, sign_name, whether_reason_sign, whether_satisfy = dataset_main_pump_friction()
+    assert len(sign_name) == len(whether_reason_sign) == len(whether_satisfy)
+
+    for i in range(len(whether_satisfy)):
+        whether_satisfy[i] = 0
+    weight_table = np.array(weight_table)
+    whether_satisfy = np.array(whether_satisfy)
     calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
-    print(calculated_rules)
-    print(rule2failuremode)
-    print(failuremodes)
-    print(failuremodes_alarm_map)
+    # 由于征兆都不满足，因此输出必为0
+    for key in calculated_rules.keys():
+        assert abs(calculated_rules[key]-0) < 1e-5
+
+    for key in failuremodes.keys():
+        assert abs(failuremodes[key]-0) < 1e-5
+
+    for key in failuremodes_alarm_map.keys():
+        assert failuremodes_alarm_map[key] == 'A'
+
+
+# 部分满足，都不满足
+def test_part_satisfy_trend_threshold_no_reason():
+    # 读取数据
+    weight_table, sign_name, whether_reason_sign, whether_satisfy = dataset_main_pump_friction()
+    assert len(sign_name) == len(whether_reason_sign) == len(whether_satisfy)
+    not_reason_sign_index = []
+    for i in range(len(whether_reason_sign)):
+        if not whether_reason_sign[i]:
+            not_reason_sign_index.append(i)
+    random.shuffle(not_reason_sign_index)
+    # 选其中的一半满足
+    for i in range(len(not_reason_sign_index) // 2):
+        whether_satisfy[not_reason_sign_index[i]] = 1
+
+    weight_table = np.array(weight_table)
+    whether_satisfy = np.array(whether_satisfy)
+    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
+    # 由于征兆都不满足，因此输出必为0
+    for key in calculated_rules.keys():
+        assert abs(calculated_rules[key]-0) < 1e-5
+
+    for key in failuremodes.keys():
+        assert abs(failuremodes[key]-0) < 1e-5
+
+    for key in failuremodes_alarm_map.keys():
+        assert failuremodes_alarm_map[key] == 'A'
+
+
+# 全满足，都不满足
+def test_all_satisfy_trend_threshold_no_reason():
+    # 读取数据
+    weight_table, sign_name, whether_reason_sign, whether_satisfy = dataset_main_pump_friction()
+    assert len(sign_name) == len(whether_reason_sign) == len(whether_satisfy)
+    for i in range(len(whether_reason_sign)):
+        if not whether_reason_sign[i]:
+            whether_satisfy[i] = 1
+
+    weight_table = np.array(weight_table)
+    whether_satisfy = np.array(whether_satisfy)
+    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
+    # 由于征兆都不满足，因此输出必为0
+    for key in calculated_rules.keys():
+        assert calculated_rules[key]-0 < 1 and calculated_rules[key] > 0
+
+    for key in failuremodes.keys():
+        assert abs(failuremodes[key]) < 1 and failuremodes[key] > 0
+
+    for key in failuremodes_alarm_map.keys():
+        assert failuremodes_alarm_map[key] == 'C'
+
+
+# 都不满足，部分满足
+def test_no_satisfy_trend_threshold_part_reason():
+    # 读取数据
+    weight_table, sign_name, whether_reason_sign, whether_satisfy = dataset_main_pump_friction()
+    reason_signs_index = []
+    for i in range(len(whether_reason_sign)):
+        if whether_reason_sign[i]:
+            reason_signs_index.append(i)
+    random.shuffle(reason_signs_index)
+    for i in range(min(len(reason_signs_index)//2+1, len(reason_signs_index))):
+        whether_satisfy[reason_signs_index[i]] = 1
+
+    weight_table = np.array(weight_table)
+    whether_satisfy = np.array(whether_satisfy)
+    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
+    # 由于征兆都不满足，因此输出必为0
+    for key in calculated_rules.keys():
+        assert calculated_rules[key] > 0
+
+    for key in failuremodes.keys():
+        assert failuremodes[key] > 0
+
+    for key in failuremodes_alarm_map.keys():
+        assert failuremodes_alarm_map[key] == 'B'
+
+
+# 部门满足，部分满足
+def test_part_satisfy_trend_threshold_part_reason():
+    # 读取数据
+    weight_table, sign_name, whether_reason_sign, whether_satisfy = dataset_main_pump_friction()
+    reason_signs_index = []
+    not_reason_signs_index = []
+    for i in range(len(whether_reason_sign)):
+        if whether_reason_sign[i]:
+            reason_signs_index.append(i)
+        else:
+            not_reason_signs_index.append(i)
+    random.shuffle(reason_signs_index)
+    for i in range(min(len(reason_signs_index)//2+1, len(reason_signs_index))):
+        whether_satisfy[reason_signs_index[i]] = 1
+
+    random.shuffle(not_reason_signs_index)
+    for i in range(len(not_reason_signs_index)//2):
+        whether_satisfy[not_reason_signs_index[i]] = 1
+
+    weight_table = np.array(weight_table)
+    whether_satisfy = np.array(whether_satisfy)
+    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
+    # 由于征兆都不满足，因此输出必为0
+    for key in calculated_rules.keys():
+        assert calculated_rules[key] > 0
+
+    for key in failuremodes.keys():
+        assert failuremodes[key] > 0
+
+    for key in failuremodes_alarm_map.keys():
+        assert failuremodes_alarm_map[key] == 'B'
+
+
+# 全满足，部分满足
+def test_all_satisfy_trend_threshold_part_reason():
+    # 读取数据
+    weight_table, sign_name, whether_reason_sign, whether_satisfy = dataset_main_pump_friction()
+    reason_signs_index = []
+    for i in range(len(whether_reason_sign)):
+        if whether_reason_sign[i]:
+            reason_signs_index.append(i)
+        else:
+            whether_satisfy[i] = 1
+    random.shuffle(reason_signs_index)
+    for i in range(min(len(reason_signs_index)//2+1, len(reason_signs_index))):
+        whether_satisfy[reason_signs_index[i]] = 1
+
+    weight_table = np.array(weight_table)
+    whether_satisfy = np.array(whether_satisfy)
+    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
+    # 由于征兆都不满足，因此输出必为0
+    for key in calculated_rules.keys():
+        assert calculated_rules[key] > 0
+
+    for key in failuremodes.keys():
+        assert failuremodes[key] > 0
+
+    for key in failuremodes_alarm_map.keys():
+        if min(len(reason_signs_index)//2+1, len(reason_signs_index)) >= 1:
+            assert failuremodes_alarm_map[key] == 'D'
+        else:
+            assert failuremodes_alarm_map[key] == 'C'
+
+
+# 都不满足，全满足
+def test_no_satisfy_trend_threshold_all_reason():
+    # 读取数据
+    weight_table, sign_name, whether_reason_sign, whether_satisfy = dataset_main_pump_friction()
+    for i in range(len(whether_reason_sign)):
+        if whether_reason_sign[i]:
+            whether_satisfy[i] = 1
+
+    weight_table = np.array(weight_table)
+    whether_satisfy = np.array(whether_satisfy)
+    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
+    # 由于征兆都不满足，因此输出必为0
+    for key in calculated_rules.keys():
+        assert calculated_rules[key] > 0
+
+    for key in failuremodes.keys():
+        assert failuremodes[key] > 0
+
+    for key in failuremodes_alarm_map.keys():
+        assert failuremodes_alarm_map[key] == 'B'
+
+
+# 部分满足，全满足
+def test_part_satisfy_trend_threshold_all_reason():
+    # 读取数据
+    weight_table, sign_name, whether_reason_sign, whether_satisfy = dataset_main_pump_friction()
+    assert len(sign_name) == len(whether_reason_sign) == len(whether_satisfy)
+    not_reason_sign_index = []
+    for i in range(len(whether_reason_sign)):
+        if not whether_reason_sign[i]:
+            not_reason_sign_index.append(i)
+        else:
+            whether_satisfy[i] = 1
+    random.shuffle(not_reason_sign_index)
+    # 选其中的一半满足
+    for i in range(len(not_reason_sign_index) // 2):
+        whether_satisfy[not_reason_sign_index[i]] = 1
+
+    weight_table = np.array(weight_table)
+    whether_satisfy = np.array(whether_satisfy)
+    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
+    # 由于征兆都不满足，因此输出必为0
+    for key in calculated_rules.keys():
+        assert abs(calculated_rules[key]-0) < 1e-5
+
+    for key in failuremodes.keys():
+        assert abs(failuremodes[key]-0) < 1e-5
+
+    for key in failuremodes_alarm_map.keys():
+        assert failuremodes_alarm_map[key] == 'B'
+
+
+# 全满足，全满足
+def test_all_satisfy_trend_threshold_all_reason():
+    # 读取数据
+    weight_table, sign_name, whether_reason_sign, whether_satisfy = dataset_main_pump_friction()
+    assert len(sign_name) == len(whether_reason_sign) == len(whether_satisfy)
+
+    for i in range(len(whether_satisfy)):
+        whether_satisfy[i] = 1
+    weight_table = np.array(weight_table)
+    whether_satisfy = np.array(whether_satisfy)
+    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
+    # 由于征兆都不满足，因此输出必为0
+    for key in calculated_rules.keys():
+        assert calculated_rules[key]-0 > 0
+
+    for key in failuremodes.keys():
+        assert failuremodes[key]-0 > 0
+
+    for key in failuremodes_alarm_map.keys():
+        assert failuremodes_alarm_map[key] == 'D'
 
 
 if __name__ == "__main__":
-    test_part_threshold()
+    pass

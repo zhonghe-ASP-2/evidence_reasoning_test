@@ -374,7 +374,7 @@ def resultshow(R,R1):
  #       dic[R1[i]] ='%.4f' % float(R[i, 0])                        #dic中R1元素分别对应R1元素（取4位小数）
     return dic
 '''样例结果计算'''
-def testresult(M,M1,M2,M3,M4,M5,M6, r_ind):
+def calculate_result(M,M1,M2,M3,M4,M5,M6, r_ind):
     a1 = 80                                                 #趋势阈值征兆置信度权重
     a2 = 100 - a1                                             #原因征兆置信度权重
     flag, f_dic, R_M1,R_M2 = Evidentialreasoning(M, M1, M2, M3, M6, r_ind)             #RM=ER算法
@@ -393,9 +393,9 @@ def testresult(M,M1,M2,M3,M4,M5,M6, r_ind):
 
     dd = resultshow(R_M, M4)                                # dd：dict('M4":R_M, ...)
 
-    print(dd)                                        # {rule1: 置信度1, rule2:置信度2, ...}
-    print(rul_alarm)                          # {rule1: alarm1, rule2:alarm2, ...}
-    print(M5)                                        # {rule1: fault mode1, rule2 fault mode2, ... }
+    # print(dd)                                        # {rule1: 置信度1, rule2:置信度2, ...}
+    # print(rul_alarm)                          # {rule1: alarm1, rule2:alarm2, ...}
+    # print(M5)                                        # {rule1: fault mode1, rule2 fault mode2, ... }
 
     dic_list1 = []
     di_di = {}
@@ -418,7 +418,7 @@ def testresult(M,M1,M2,M3,M4,M5,M6, r_ind):
 
     for i in range(len(alarm)):
         alarm[dic_list1[i]] = f_dic[int(an[i])]                              #各个失效模式报警文字
-    print(alarm)
+    # print(alarm)
 
     for i in range(len(dic_list1)):
         if an_h[i] == 0 or an_h[i] == 1:
@@ -438,7 +438,7 @@ def testresult(M,M1,M2,M3,M4,M5,M6, r_ind):
             if M5[M4[j]] == dic_list1[i]:
                 dic_list2.append(dd[M4[j]])
         di_di[dic_list1[i]] = max(dic_list2)                #di_di dic's value'''
-    print(di_di)                                                    #各个失效模式置信度
+    # print(di_di)                                                    #各个失效模式置信度
     return dd, M5, di_di, alarm
 '''约简'''
 def removeun(Q, Q1, Q0, rea):
@@ -459,8 +459,8 @@ def removeun(Q, Q1, Q0, rea):
             Q5.append(0)
             Q4.append(Q2[i])  # attribute?
 
-    print(Q3)
-    print(Q4)
+    # print(Q3)
+    # print(Q4)
     return Q3, Q4, Q5
 
 '''---中间节点部分---'''
@@ -535,7 +535,7 @@ def methondcal(data, sign, reason, omen):
     di = dictrule(data)
     w1 = np.ones([1, len(E)])  # 不同失效模式下的失效征兆权重
     '''失效模式置信度结果'''
-    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = testresult(data1, w1, E, pre, RU, di,dic_m, reason_ind)
+    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = calculate_result(data1, w1, E, pre, RU, di, dic_m, reason_ind)
     # print('>>>>>中间节点计算：')
     # inp = calculated_rules
     # dat = readdata1("./2.xlsx")
