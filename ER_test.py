@@ -184,6 +184,7 @@ def test_part_satisfy_trend_threshold_part_reason():
     for key in calculated_rules.keys():
         assert abs(calculated_rules[key]) < 1e-5
 
+
     for key in failuremodes.keys():
         assert abs(failuremodes[key]) < 1e-5
 
