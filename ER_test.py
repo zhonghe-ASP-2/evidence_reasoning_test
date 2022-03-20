@@ -149,10 +149,10 @@ def test_no_satisfy_trend_threshold_part_reason():
     calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
     # 由于征兆都不满足，因此输出必为0
     for key in calculated_rules.keys():
-        assert calculated_rules[key] > 0
+        assert abs(calculated_rules[key] - 0) < 1e-5
 
     for key in failuremodes.keys():
-        assert failuremodes[key] > 0
+        assert abs(failuremodes[key]) < 1e-5
 
     for key in failuremodes_alarm_map.keys():
         assert failuremodes_alarm_map[key] == 'B'
@@ -182,10 +182,10 @@ def test_part_satisfy_trend_threshold_part_reason():
     calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
     # 由于征兆都不满足，因此输出必为0
     for key in calculated_rules.keys():
-        assert calculated_rules[key] > 0
+        assert abs(calculated_rules[key] - 0) < 1e-5
 
     for key in failuremodes.keys():
-        assert failuremodes[key] > 0
+        assert abs(failuremodes[key]) < 1e-5
 
     for key in failuremodes_alarm_map.keys():
         assert failuremodes_alarm_map[key] == 'B'
@@ -235,10 +235,10 @@ def test_no_satisfy_trend_threshold_all_reason():
     calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
     # 由于征兆都不满足，因此输出必为0
     for key in calculated_rules.keys():
-        assert calculated_rules[key] > 0
+        assert abs(calculated_rules[key] - 0) < 1e-5
 
     for key in failuremodes.keys():
-        assert failuremodes[key] > 0
+        assert abs(failuremodes[key]) < 1e-5
 
     for key in failuremodes_alarm_map.keys():
         assert failuremodes_alarm_map[key] == 'B'
