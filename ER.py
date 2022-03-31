@@ -439,7 +439,7 @@ def calculate_result(M,M1,M2,M3,M4,M5,M6, r_ind):
                 dic_list2.append(dd[M4[j]])
         di_di[dic_list1[i]] = max(dic_list2)                #di_di dic's value'''
     # print(di_di)                                                    #各个失效模式置信度
-    return dd, M5, di_di, alarm
+    return dd, rul_alarm, M5, di_di, alarm
 '''约简'''
 def removeun(Q, Q1, Q0, rea):
     Q2 = []

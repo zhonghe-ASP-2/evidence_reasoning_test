@@ -39,7 +39,7 @@ def test_results_type():
     assert len(sign_name) == len(whether_reason_sign) == len(whether_satisfy)
     weight_table = np.array(weight_table)
     whether_satisfy = np.array(whether_satisfy)
-    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name,
+    calculated_rules, rule_alarms, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name,
                                                                                           whether_reason_sign,
                                                                                           whether_satisfy)
     # print("#######################results############################")
@@ -69,7 +69,7 @@ def test_no_satisfy():
         whether_satisfy[i] = 0
     weight_table = np.array(weight_table)
     whether_satisfy = np.array(whether_satisfy)
-    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
+    calculated_rules, rule_alarms, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
     # 由于征兆都不满足，因此输出必为0
     for key in calculated_rules.keys():
         assert abs(calculated_rules[key]-0) < 1e-5
@@ -97,7 +97,7 @@ def test_part_satisfy_trend_threshold_no_reason():
 
     weight_table = np.array(weight_table)
     whether_satisfy = np.array(whether_satisfy)
-    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
+    calculated_rules, rule_alarms, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
     # 由于征兆都不满足，因此输出必为0
     for key in calculated_rules.keys():
         assert abs(calculated_rules[key]-0) < 1e-5
@@ -120,7 +120,7 @@ def test_all_satisfy_trend_threshold_no_reason():
 
     weight_table = np.array(weight_table)
     whether_satisfy = np.array(whether_satisfy)
-    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
+    calculated_rules, rule_alarms, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
     # 由于征兆都不满足，因此输出必为0
     for key in calculated_rules.keys():
         assert calculated_rules[key]-0 < 1 and calculated_rules[key] > 0
@@ -146,7 +146,7 @@ def test_no_satisfy_trend_threshold_part_reason():
 
     weight_table = np.array(weight_table)
     whether_satisfy = np.array(whether_satisfy)
-    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
+    calculated_rules, rule_alarms, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
     # 由于征兆都不满足，因此输出必为0
     for key in calculated_rules.keys():
         assert abs(calculated_rules[key]) < 1e-5
@@ -179,7 +179,7 @@ def test_part_satisfy_trend_threshold_part_reason():
 
     weight_table = np.array(weight_table)
     whether_satisfy = np.array(whether_satisfy)
-    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
+    calculated_rules, rule_alarms, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
     # 由于征兆都不满足，因此输出必为0
     for key in calculated_rules.keys():
         assert abs(calculated_rules[key]) < 1e-5
@@ -208,7 +208,7 @@ def test_all_satisfy_trend_threshold_part_reason():
 
     weight_table = np.array(weight_table)
     whether_satisfy = np.array(whether_satisfy)
-    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
+    calculated_rules, rule_alarms, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
     # 由于征兆都不满足，因此输出必为0
     for key in calculated_rules.keys():
         assert calculated_rules[key] > 0
@@ -233,7 +233,7 @@ def test_no_satisfy_trend_threshold_all_reason():
 
     weight_table = np.array(weight_table)
     whether_satisfy = np.array(whether_satisfy)
-    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
+    calculated_rules, rule_alarms, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
     # 由于征兆都不满足，因此输出必为0
     for key in calculated_rules.keys():
         assert abs(calculated_rules[key]) < 1e-5
@@ -263,7 +263,7 @@ def test_part_satisfy_trend_threshold_all_reason():
 
     weight_table = np.array(weight_table)
     whether_satisfy = np.array(whether_satisfy)
-    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
+    calculated_rules, rule_alarms, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
     # 由于征兆都不满足，因此输出必为0
     for key in calculated_rules.keys():
         assert abs(calculated_rules[key]-0) < 1e-5
@@ -285,7 +285,7 @@ def test_all_satisfy_trend_threshold_all_reason():
         whether_satisfy[i] = 1
     weight_table = np.array(weight_table)
     whether_satisfy = np.array(whether_satisfy)
-    calculated_rules, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
+    calculated_rules, rule_alarms, rule2failuremode, failuremodes, failuremodes_alarm_map = methondcal(weight_table, sign_name, whether_reason_sign, whether_satisfy)
     # 由于征兆都不满足，因此输出必为0
     for key in calculated_rules.keys():
         assert calculated_rules[key]-0 > 0
