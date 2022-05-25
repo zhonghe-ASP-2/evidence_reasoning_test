@@ -37,6 +37,8 @@ def reason_flag(B, r, E):
     c_f = np.zeros(len(B))
     flag = np.zeros(len(B))
     for i in range(len(B)):
+        if B[i] == []:
+            c_f[i] = c_f[i] + 1
         for c in B[i]:
             if c not in E:
                 c_f[i] = c_f[i] + 1
@@ -46,6 +48,8 @@ def reason_flag(B, r, E):
         else:
             c_f[i] = 1                               #趋势阈值征兆满足情况 规则内趋势阈值征兆全部满足为1
     for i in range(len(r)):
+        if r[i] == []:
+            r_f[i] = r_f[i] + 1
         for c in r[i]:
             if c not in E:
                 r_f[i] = r_f[i] + 1
